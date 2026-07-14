@@ -91,7 +91,7 @@ const Layout = () => {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0">
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+        <div className="flex-1 overflow-y-auto p-4 pt-16 md:p-6 md:pt-16 lg:p-8 lg:pt-8">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden fixed top-4 left-4 z-10 p-2.5 rounded-xl bg-white border border-emerald-200 text-emerald-600 shadow-sm hover:bg-emerald-50 transition-colors"
