@@ -68,7 +68,7 @@ const CategoryPieChart = ({ data, loading }: CategoryPieChartProps) => {
               <Cell key={index} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip formatter={(value: number) => formatCurrency(value)} />
+          <Tooltip formatter={(value) => formatCurrency(Number(value))} />
           <Legend />
         </PieChart>
       </ResponsiveContainer>

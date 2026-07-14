@@ -40,7 +40,7 @@ const MonthlyTrendChart = ({ data, loading }: MonthlyTrendChartProps) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" fontSize={12} />
           <YAxis fontSize={12} />
-          <Tooltip formatter={(value: number) => `Rs. ${value.toLocaleString()}`} />
+          <Tooltip formatter={(value) => `Rs. ${Number(value).toLocaleString()}`} />
           <Legend />
           <Bar dataKey="Income" fill="#10B981" radius={[4, 4, 0, 0]} />
           <Bar dataKey="Expense" fill="#EF4444" radius={[4, 4, 0, 0]} />
