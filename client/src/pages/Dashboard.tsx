@@ -13,8 +13,8 @@ const greeting = () => {
   return 'Good evening'
 }
 
-const SkeletonChart = ({ className }: { className?: string }) => (
-  <div className={`bg-white rounded-2xl border border-gray-100 p-6 shadow-sm ${className || ''}`}>
+const SkeletonChart = () => (
+  <div className="bg-white rounded-2xl border border-emerald-100/50 p-6 shadow-sm">
     <div className="h-5 w-44 rounded animate-shimmer mb-6" />
     <div className="h-64 rounded-xl animate-shimmer" />
   </div>
@@ -48,12 +48,15 @@ const Dashboard = () => {
   }, [])
 
   return (
-    <div className="animate-fade-in space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          {greeting()}{user?.name ? `, ${user.name.split(' ')[0]}` : ''} 👋
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">Here's your financial overview</p>
+    <div className="animate-fade-in space-y-6 max-w-7xl mx-auto pt-2">
+      <div className="flex items-center gap-4">
+        <div className="h-10 w-1 bg-gradient-to-b from-emerald-400 to-cyan-400 rounded-full" />
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            {greeting()}{user?.name ? `, ${user.name.split(' ')[0]}` : ''}
+          </h1>
+          <p className="text-sm text-emerald-600/70 mt-0.5">Here's your financial overview</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -70,12 +73,12 @@ const Dashboard = () => {
           </>
         ) : (
           <>
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+            <div className="bg-white rounded-2xl border border-emerald-100/50 p-6 shadow-sm">
               <h3 className="text-base font-semibold text-gray-900 mb-1">Spending by Category</h3>
               <p className="text-xs text-gray-500 mb-4">Breakdown of your expenses</p>
               <CategoryPieChart data={byCategory} />
             </div>
-            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+            <div className="bg-white rounded-2xl border border-emerald-100/50 p-6 shadow-sm">
               <h3 className="text-base font-semibold text-gray-900 mb-1">Monthly Trend</h3>
               <p className="text-xs text-gray-500 mb-4">Income vs expenses over time</p>
               <MonthlyTrendChart data={monthly} />
