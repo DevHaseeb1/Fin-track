@@ -4,8 +4,24 @@ import SummaryCard from '../components/SummaryCard'
 import CategoryPieChart from '../components/CategoryPieChart'
 import MonthlyTrendChart from '../components/MonthlyTrendChart'
 import { formatCurrency } from '../utils/formatCurrency'
+import { useAuth } from '../context/AuthContext'
+
+const greeting = () => {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 17) return 'Good afternoon'
+  return 'Good evening'
+}
+
+const SkeletonChart = ({ className }: { className?: string }) => (
+  <div className={`bg-white rounded-2xl border border-gray-100 p-6 shadow-sm ${className || ''}`}>
+    <div className="h-5 w-44 rounded animate-shimmer mb-6" />
+    <div className="h-64 rounded-xl animate-shimmer" />
+  </div>
+)
 
 const Dashboard = () => {
+  const { user } = useAuth()
   const [summary, setSummary] = useState<any>(null)
   const [byCategory, setByCategory] = useState<any[]>([])
   const [monthly, setMonthly] = useState<any[]>([])
@@ -32,24 +48,40 @@ const Dashboard = () => {
   }, [])
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h2>
+    <div className="animate-fade-in space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {greeting()}{user?.name ? `, ${user.name.split(' ')[0]}` : ''} 👋
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">Here's your financial overview</p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <SummaryCard title="Total Income" value={formatCurrency(summary?.totalIncome || 0)} color="text-green-600" loading={loading} />
-        <SummaryCard title="Total Expenses" value={formatCurrency(summary?.totalExpense || 0)} color="text-red-600" loading={loading} />
-        <SummaryCard title="Net Balance" value={formatCurrency(summary?.netBalance || 0)} color="text-blue-600" loading={loading} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <SummaryCard title="Total Income" value={formatCurrency(summary?.totalIncome || 0)} type="income" loading={loading} />
+        <SummaryCard title="Total Expenses" value={formatCurrency(summary?.totalExpense || 0)} type="expense" loading={loading} />
+        <SummaryCard title="Net Balance" value={formatCurrency(summary?.netBalance || 0)} type="balance" loading={loading} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Spending by Category</h3>
-          <CategoryPieChart data={byCategory} loading={loading} />
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Monthly Trend</h3>
-          <MonthlyTrendChart data={monthly} loading={loading} />
-        </div>
+        {loading ? (
+          <>
+            <SkeletonChart />
+            <SkeletonChart />
+          </>
+        ) : (
+          <>
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+              <h3 className="text-base font-semibold text-gray-900 mb-1">Spending by Category</h3>
+              <p className="text-xs text-gray-500 mb-4">Breakdown of your expenses</p>
+              <CategoryPieChart data={byCategory} />
+            </div>
+            <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+              <h3 className="text-base font-semibold text-gray-900 mb-1">Monthly Trend</h3>
+              <p className="text-xs text-gray-500 mb-4">Income vs expenses over time</p>
+              <MonthlyTrendChart data={monthly} />
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

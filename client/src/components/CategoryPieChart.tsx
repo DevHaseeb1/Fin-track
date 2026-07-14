@@ -11,12 +11,11 @@ const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'
 
 interface CategoryPieChartProps {
   data: CategoryData[]
-  loading?: boolean
 }
 
 const RADIAN = Math.PI / 180
 
-const renderInsideLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, category }: any) => {
+const renderInsideLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
   if (percent < 0.08) return null
 
   const radius = (innerRadius + outerRadius) / 2
@@ -38,21 +37,31 @@ const renderInsideLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent
   )
 }
 
-const CategoryPieChart = ({ data, loading }: CategoryPieChartProps) => {
-  if (loading) {
-    return <div className="h-80 bg-gray-100 animate-pulse rounded-xl" />
-  }
+const CustomTooltip = ({ active, payload }: any) => {
+  if (!active || !payload?.length) return null
+  const { category, total } = payload[0].payload
+  return (
+    <div className="bg-gray-900 text-white px-4 py-3 rounded-xl shadow-lg text-sm">
+      <p className="font-medium">{category}</p>
+      <p className="text-gray-300 mt-0.5">{formatCurrency(total)}</p>
+    </div>
+  )
+}
 
+const CategoryPieChart = ({ data }: CategoryPieChartProps) => {
   if (data.length === 0) {
     return (
-      <div className="h-80 flex items-center justify-center text-gray-400 text-sm">
+      <div className="h-64 flex flex-col items-center justify-center text-gray-400 text-sm gap-2">
+        <svg className="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+        </svg>
         No data available
       </div>
     )
   }
 
   return (
-    <div className="h-80">
+    <div className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -61,15 +70,22 @@ const CategoryPieChart = ({ data, loading }: CategoryPieChartProps) => {
             nameKey="category"
             cx="50%"
             cy="50%"
-            outerRadius={90}
+            outerRadius={95}
+            innerRadius={50}
             label={renderInsideLabel}
+            animationBegin={200}
+            animationDuration={800}
           >
             {data.map((_, index) => (
               <Cell key={index} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-          <Legend />
+          <Tooltip content={<CustomTooltip />} />
+          <Legend
+            verticalAlign="bottom"
+            height={36}
+            formatter={(value) => <span className="text-xs text-gray-600">{value}</span>}
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>
